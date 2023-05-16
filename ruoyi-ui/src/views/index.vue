@@ -11,9 +11,11 @@
       </div>
     </div>
     <div class="main_wrap">
-      <el-card>
-        <el-row :gutter="20">
-          <el-col :span="8" v-show="classifyActiveIndex == 1">
+
+      <!--      <el-card>-->
+      <el-row :gutter="20">
+        <el-col :span="8" v-show="classifyActiveIndex == 1">
+          <el-card>
             <div class="grid-content bg-purple">
               <h4 class="default_title">输入</h4>
               <el-input
@@ -27,12 +29,18 @@
                 <el-button size="small" type="primary" @click="queryData">确定</el-button>
               </div>
             </div>
-          </el-col>
-          <el-col :span="classifyActiveIndex == 1 ? 16 : 24">
+          </el-card>
+        </el-col>
+        <el-col :span="classifyActiveIndex == 1 ? 16 : 24">
+          <el-card>
             <div class="grid-content bg-purple">
-              <h4 class="default_title">输出</h4>
+              <h4 class="default_title">{{classifyActiveIndex == 1 ? '输出' : '模型'}}</h4>
               <div style="text-align: center;margin-top:50px;" v-if="!tableCols.length">
-                <span style="color:#666;font-size: 14px;">当前暂无输出内容</span>
+                <img src="../assets/images/empty.png"/>
+                <div style="margin-top:10px;">
+                  <span style="color:rgb(139 148 159);font-size: 14px;" v-if="classifyActiveIndex == 1">在左侧输入描述，创建你的AI绘画作品</span>
+                  <span style="color:rgb(139 148 159);font-size: 14px;" v-if="classifyActiveIndex == 2">当前暂无任何模型，请在GPT中创建</span>
+                </div>
               </div>
               <el-table
                 v-else
@@ -63,9 +71,10 @@
                 </el-table-column>
               </el-table>
             </div>
-          </el-col>
-        </el-row>
-      </el-card>
+          </el-card>
+        </el-col>
+      </el-row>
+      <!--      </el-card>-->
     </div>
     <el-dialog title="编辑" :visible.sync="dialogFormVisible">
       <el-form :model="form">
@@ -96,44 +105,42 @@ export default {
   name: "Index",
   data() {
     return {
-      classifyActiveIndex:1,
+      classifyActiveIndex: 1,
       tableCols: [
         // {field: 'date', title: '日期'},
         // {field: 'name', title: '姓名'},
         // {field: 'address', title: '地址'},
       ],
       tableData: [
-      //   {
-      //   date: '2016-05-02',
-      //   name: '王小虎',
-      //   address: '上海市普陀区金沙江路 1518 弄'
-      // }, {
-      //   date: '2016-05-04',
-      //   name: '王小虎',
-      //   address: '上海市普陀区金沙江路 1517 弄'
-      // }, {
-      //   date: '2016-05-01',
-      //   name: '王小虎',
-      //   address: '上海市普陀区金沙江路 1519 弄'
-      // }, {
-      //   date: '2016-05-03',
-      //   name: '王小虎',
-      //   address: '上海市普陀区金沙江路 1516 弄'
-      // }
+        //   {
+        //   date: '2016-05-02',
+        //   name: '王小虎',
+        //   address: '上海市普陀区金沙江路 1518 弄'
+        // }, {
+        //   date: '2016-05-04',
+        //   name: '王小虎',
+        //   address: '上海市普陀区金沙江路 1517 弄'
+        // }, {
+        //   date: '2016-05-01',
+        //   name: '王小虎',
+        //   address: '上海市普陀区金沙江路 1519 弄'
+        // }, {
+        //   date: '2016-05-03',
+        //   name: '王小虎',
+        //   address: '上海市普陀区金沙江路 1516 弄'
+        // }
       ],
       enterText: '',
-      dialogFormVisible:false,
-      form: {
-
-      },
+      dialogFormVisible: false,
+      form: {},
       formLabelWidth: '120px',
-      dialogSubmitVisible:false,
-      checkList:[]
+      dialogSubmitVisible: false,
+      checkList: []
     };
   },
   methods: {
     queryData() {
-      if(this.enterText == '') {
+      if (this.enterText == '') {
         this.$message({
           message: '请输入查询内容',
           type: 'warning'
@@ -146,13 +153,13 @@ export default {
         ]
 
         this.form = {
-          date:'',
-          name:'',
-          address:''
+          date: '',
+          name: '',
+          address: ''
         }
 
         this.tableData = [
-            {
+          {
             date: '2016-05-02',
             name: '王小虎',
             address: '上海市普陀区金沙江路 1518 弄'
@@ -174,7 +181,7 @@ export default {
     },
     showEdit(data) {
       this.dialogFormVisible = true
-      for(let x in data) {
+      for (let x in data) {
         this.form[x] = data[x]
       }
     },
@@ -186,7 +193,7 @@ export default {
       this.dialogSubmitVisible = true;
     },
     confirmSubmit() {
-      if(!this.checkList.length) {
+      if (!this.checkList.length) {
         this.$message({
           message: '至少选择一个条件',
           type: 'warning'
@@ -218,24 +225,29 @@ export default {
       margin-right: 15px;
       cursor: pointer;
 
+
       h4 {
         font-size: 16px;
         font-weight: bold;
-        color: #000;
+        color: #101010;
         margin: 5px 0px;
       }
 
       p {
         font-size: 12px;
-        color: #000;
+        color: #666;
       }
     }
 
     .classify_active {
       border: 1px solid #6691e8;
+      background-color: rgba(102, 145, 232, 0.1);
+      box-shadow: 2px 2px 5px #3398E14C;
+
       h4 {
-        color: #6691e8;
+        color: #4b86ff;
       }
+
       p {
         color: #6691e8;
       }
@@ -246,16 +258,17 @@ export default {
     height: calc(100% - 100px);
 
     ::v-deep {
-      .el-card {
+
+      .el-row {
         height: 100%;
 
-        .el-card__body {
+        .el-col {
           height: 100%;
 
-          .el-row {
+          .el-card {
             height: 100%;
 
-            .el-col {
+            .el-card__body {
               height: 100%;
 
               .grid-content {
@@ -265,6 +278,7 @@ export default {
                   font-weight: bold;
                   font-size: 14px;
                   margin-bottom: 10px;
+                  color:#333333;
                 }
 
                 .el-textarea {
@@ -275,6 +289,11 @@ export default {
                     height: 100%;
                   }
                 }
+
+                .el-table .el-table__header-wrapper th {
+                  background-color: #e3effb;
+                }
+
               }
             }
           }
