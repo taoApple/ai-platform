@@ -78,7 +78,7 @@
     </div>
     <el-dialog title="编辑" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item v-for="item in tableCols" :label="item.title" :label-width="formLabelWidth">
+        <el-form-item v-for="item in tableCols" :label="item.label" :label-width="formLabelWidth">
           <el-input v-model="form[item.prop]" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import firstPage from '@/api/firstPage/index'
 export default {
   name: "Index",
   data() {
@@ -135,7 +136,8 @@ export default {
       form: {},
       formLabelWidth: '120px',
       dialogSubmitVisible: false,
-      checkList: []
+      checkList: [],
+      editData:{},
     };
   },
   methods: {
@@ -146,37 +148,31 @@ export default {
           type: 'warning'
         });
       } else {
-        this.tableCols = [
-          {prop: 'date', label: '日期'},
-          {prop: 'name', label: '姓名'},
-          {prop: 'address', label: '地址'},
-        ]
-
-        this.form = {
-          date: '',
-          name: '',
-          address: ''
+        let param = {
+          prompt:this.enterText
         }
 
-        this.tableData = [
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-          }, {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          }, {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
+        firstPage.queryScene(param).then(res => {
+          let tabCols = [];
+          let tabData = []
+          let formParam = {};
+          if(res.data && res.data.length) {
+            let data = res.data[0].content
+            if(data) {
+              data = JSON.parse(data)
+
+              if(data && data.length) {
+                tabData = data;
+                for(let x in data[0]) {
+                  tabCols.push({prop:x,label:x})
+                  formParam[x] = ''
+                }
+              }
+              this.tableCols = tabCols
+              this.tableData = tabData
+            }
           }
-        ]
+        })
       }
     },
     showEdit(data) {
@@ -184,12 +180,15 @@ export default {
       for (let x in data) {
         this.form[x] = data[x]
       }
+      console.log(this.tableCols)
+      console.log(this.form)
     },
     confirmEdit() {
       console.log(this.form)
       this.dialogFormVisible = false
     },
     showSubmit(data) {
+      this.editData = data
       this.dialogSubmitVisible = true;
     },
     confirmSubmit() {
@@ -200,7 +199,19 @@ export default {
         });
       } else {
         this.dialogSubmitVisible = false;
-        console.log(this.checkList)
+        let contArr = [];
+        if(this.checkList && this.checkList.length) {
+          for(let i=0;i<this.checkList.length;i++) {
+            contArr.push(this.editData[this.checkList[i]])
+          }
+        }
+        contArr = contArr.join(',')
+        let params = {
+          prompt:contArr
+        }
+        firstPage.querySd(params).then(res => {
+          console.log(res)
+        })
       }
 
     }
