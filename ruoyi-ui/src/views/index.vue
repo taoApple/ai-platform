@@ -13,7 +13,7 @@
     <div class="main_wrap">
 
       <!--      <el-card>-->
-      <el-row :gutter="20">
+      <el-row :gutter="20"  v-loading="tabLoading">
         <el-col :span="8" v-show="classifyActiveIndex == 1">
           <el-card>
             <div class="grid-content bg-purple">
@@ -59,6 +59,10 @@
                   label="图片"
                   prop="picture"
                 >
+                  <template slot-scope="scope">
+                    <img :src="scope.row.imgSrc" class="tab_img" style="width: 100px;">
+<!--                    <span>{{scope.row.imgSrc}}</span>-->
+                  </template>
                 </el-table-column>
                 <el-table-column
                   v-if="classifyActiveIndex == 2"
@@ -78,7 +82,7 @@
     </div>
     <el-dialog title="编辑" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item v-for="item in tableCols" :label="item.label" :label-width="formLabelWidth">
+        <el-form-item v-for="item in editTabCols" :label="item.label" :label-width="formLabelWidth">
           <el-input v-model="form[item.prop]" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -90,7 +94,7 @@
 
     <el-dialog title="勾选生成图片的条件" :visible.sync="dialogSubmitVisible">
       <el-checkbox-group v-model="checkList">
-        <el-checkbox v-for="checkItem in tableCols" :label="checkItem.label"></el-checkbox>
+        <el-checkbox v-for="checkItem in editTabCols" :label="checkItem.label"></el-checkbox>
       </el-checkbox-group>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogSubmitVisible = false">取 消</el-button>
@@ -106,12 +110,14 @@ export default {
   name: "Index",
   data() {
     return {
+      tabLoading:false,
       classifyActiveIndex: 1,
       tableCols: [
         // {field: 'date', title: '日期'},
         // {field: 'name', title: '姓名'},
         // {field: 'address', title: '地址'},
       ],
+      editTabCols:[],
       tableData: [
         //   {
         //   date: '2016-05-02',
@@ -152,8 +158,12 @@ export default {
           prompt:this.enterText
         }
 
+        this.tabLoading = true
         firstPage.queryScene(param).then(res => {
+          // let res = {"code":200,"msg":"操作成功","data":[{"role":"assistant","content":"[\n    {\n        \"序号\": 1,\n        \"旁白\": \"镜头拉近\",\n        \"描述\": \"广州市内繁忙的街道上，人来人往，车水马龙。\",\n        \"镜头类型\": \"大景\",\n        \"持换时间\": 5,\n        \"详细图⽚内容\": \"街道上车水马龙，人来人往，有车有人，热闹非凡。\"\n    },\n    {\n        \"序号\": 2,\n        \"旁白\": \"深度镜头\",\n        \"描述\": \"镜头深入到人群中，一个青年男子穿过人群，匆匆走过。\",\n        \"镜头类型\": \"中景\",\n        \"持换时间\": 3,\n        \"详细图⽚内容\": \"一个青年男子，身穿白色T恤，黑色牛仔裤，匆匆走过人群。\"\n    },\n    {\n        \"序号\": 3,\n        \"旁白\": \"镜头切换\",\n        \"描述\": \"切换到一个年轻女孩，正在路边等待着什么。\",\n        \"镜头类型\": \"中景\",\n        \"持换时间\": 3,\n        \"详细图⽚内容\": \"一个年轻女孩，穿着一袭白色连衣裙，站在路边，焦急地等着什么。\"\n    },\n    {\n        \"序号\": 4,\n        \"旁白\": \"镜头推进\",\n        \"描述\": \"青年男子远远看见了年轻女孩，加快了脚步。\",\n        \"镜头类型\": \"远景\",\n        \"持换时间\": 3,\n        \"详细图⽚内容\": \"青年男子加快了脚步，远远地看见了年轻女孩。\"\n    },\n    {\n        \"序号\": 5,\n        \"旁白\": \"镜头切换\",\n        \"描述\": \"切换到年轻女孩的表情，她看见了青年男子，露出了微笑。\",\n        \"镜头类型\": \"中景\",\n        \"持换时间\": 3,\n        \"详细图⽚内容\": \"年轻女孩看见了青年男子，露出了微笑。\"\n    },\n    {\n        \"序号\": 6,\n        \"旁白\": \"镜头推进\",\n        \"描述\": \"青年男子跑到年轻女孩面前，两人相视而笑。\",\n        \"镜头类型\": \"中景\",\n        \"持换时间\": 3,\n        \"详细图⽚内容\": \"青年男子跑到年轻女孩面前，两人相视而笑。\"\n    },\n    {\n        \"序号\": 7,\n        \"旁白\": \"镜头切换\",\n        \"描述\": \"切换到两人手牵手漫步在广州塔附近的草坪上的画面。\",\n        \"镜头类型\": \"大景\",\n        \"持换时间\": 5,\n        \"详细图⽚内容\": \"两人手牵手漫步在广州塔附近的草坪上，周围的景色很美。\"\n    },\n    {\n        \"序号\": 8,\n        \"旁白\": \"镜头推进\",\n        \"描述\": \"两人坐在草坪上，拍照留念。\",\n        \"镜头类型\": \"中景\",\n        \"持换时间\": 3,\n        \"详细图⽚内容\": \"两人坐在草坪上，拍照留念。\"\n    },\n    {\n        \"序号\": 9,\n        \"旁白\": \"镜头切换\",\n        \"描述\": \"切换到两人在广州塔上共度浪漫时光的画面。\",\n        \"镜头类型\": \"大景\",\n        \"持换时间\": 5,\n        \"详细图⽚内容\": \"两人在广州塔上共度浪漫时光，眺望着远处的美景。\"\n    },\n    {\n        \"序号\": 10,\n        \"旁白\": \"镜头推进\",\n        \"描述\": \"两人在塔顶手牵手，虽然人群熙熙攘攘，但彼此感觉到的只有对方。\",\n        \"镜头类型\": \"中景\",\n        \"持换时间\": 5,\n        \"详细图⽚内容\": \"两人在塔顶手牵手，周围人群熙熙攘攘，但彼此感觉到的只有对方。\"\n    }\n]"}]}
+
           let tabCols = [];
+          let editCols = []
           let tabData = []
           let formParam = {};
           if(res.data && res.data.length) {
@@ -162,16 +172,32 @@ export default {
               data = JSON.parse(data)
 
               if(data && data.length) {
-                tabData = data;
                 for(let x in data[0]) {
                   tabCols.push({prop:x,label:x})
                   formParam[x] = ''
+                  if(x != '序号') {
+                    editCols.push({prop:x,label:x})
+                  }
                 }
+
+                for(let x=0;x<data.length;x++) {
+                  data[x].imgSrc = ''
+                  // data[x].imgSrc = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201801%2F11%2F20180111195541_u5SWV.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1687686395&t=50aea0a429593c05ae58ff3141df0027'
+                }
+
+                tabData = data;
               }
               this.tableCols = tabCols
               this.tableData = tabData
+              this.editTabCols = editCols
             }
           }
+        }).catch(() => {
+          this.tableCols = []
+          this.tableData = []
+          this.editTabCols = []
+        }).finally(() => {
+          this.tabLoading = false
         })
       }
     },
@@ -190,6 +216,7 @@ export default {
     showSubmit(data) {
       this.editData = data
       this.dialogSubmitVisible = true;
+      console.log(this.editData)
     },
     confirmSubmit() {
       if (!this.checkList.length) {
@@ -209,8 +236,18 @@ export default {
         let params = {
           prompt:contArr
         }
+
+        this.tabLoading = true;
         firstPage.querySd(params).then(res => {
-          console.log(res)
+          for(let i=0;i<this.tableData.length;i++) {
+            if(this.tableData[i]['序号'] == this.editData['序号']) {
+              if(res.data.images) {
+                this.tableData[i].imgSrc = 'data:image/png;base64,'+res.data.images[0]
+              }
+            }
+          }
+        }).finally(() => {
+          this.tabLoading = false;
         })
       }
 
@@ -303,6 +340,11 @@ export default {
 
                 .el-table .el-table__header-wrapper th {
                   background-color: #e3effb;
+                }
+
+                .el-table .tab_img {
+                  width: 100px;
+                  max-height: 100px;
                 }
 
               }
