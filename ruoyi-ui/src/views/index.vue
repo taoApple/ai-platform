@@ -52,6 +52,7 @@
                   v-for="cols in tableCols"
                   :prop="cols.prop"
                   :label="cols.label"
+                  :width="cols.label == '序号' ? '70px' : ''"
                 >
                 </el-table-column>
                 <el-table-column
@@ -60,8 +61,12 @@
                   prop="picture"
                 >
                   <template slot-scope="scope">
-                    <img :src="scope.row.imgSrc" class="tab_img" style="width: 100px;">
-<!--                    <span>{{scope.row.imgSrc}}</span>-->
+                    <el-image
+                      v-if="scope.row.imgSrc"
+                      class="tab_img"
+                      :src="scope.row.imgSrc"
+                      :preview-src-list="[scope.row.imgSrc]">
+                    </el-image>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -82,7 +87,7 @@
     </div>
     <el-dialog title="编辑" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item v-for="item in editTabCols" :label="item.label" :label-width="formLabelWidth">
+        <el-form-item v-for="item in editTabCols" :label="item.label" :prop="item.prop" :key="item.prop" :label-width="formLabelWidth">
           <el-input v-model="form[item.prop]" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -123,23 +128,12 @@ export default {
         //   date: '2016-05-02',
         //   name: '王小虎',
         //   address: '上海市普陀区金沙江路 1518 弄'
-        // }, {
-        //   date: '2016-05-04',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1517 弄'
-        // }, {
-        //   date: '2016-05-01',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1519 弄'
-        // }, {
-        //   date: '2016-05-03',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1516 弄'
-        // }
       ],
       enterText: '',
       dialogFormVisible: false,
-      form: {},
+      form: {
+
+      },
       formLabelWidth: '120px',
       dialogSubmitVisible: false,
       checkList: [],
@@ -202,21 +196,26 @@ export default {
       }
     },
     showEdit(data) {
+      this.editData = data
       this.dialogFormVisible = true
-      for (let x in data) {
-        this.form[x] = data[x]
+      for(let x=0;x<this.editTabCols.length;x++) {
+        this.$set(this.form, this.editTabCols[x].prop, data[this.editTabCols[x].prop]);
       }
-      console.log(this.tableCols)
-      console.log(this.form)
     },
     confirmEdit() {
-      console.log(this.form)
+      this.tableData.map(item => {
+        if(item['序号'] == this.editData['序号']) {
+          for(let x in this.form) {
+            item[x] = this.form[x]
+          }
+        }
+      })
       this.dialogFormVisible = false
     },
     showSubmit(data) {
+      this.checkList = []
       this.editData = data
       this.dialogSubmitVisible = true;
-      console.log(this.editData)
     },
     confirmSubmit() {
       if (!this.checkList.length) {
