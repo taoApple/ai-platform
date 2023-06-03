@@ -5,9 +5,9 @@
   "author": "若依",
   "license": "MIT",
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "build:prod": "vue-cli-service build",
-    "build:stage": "vue-cli-service build --mode staging",
+    "dev": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
+    "build:prod": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
+    "build:stage": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",
     "lint": "eslint --ext .js,.vue src"
   },
@@ -66,7 +66,7 @@
     "@vue/cli-plugin-babel": "4.4.6",
     "@vue/cli-plugin-eslint": "4.4.6",
     "@vue/cli-service": "4.4.6",
-    "babel-eslint": "10.1.0",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-dynamic-import-node": "2.3.3",
     "chalk": "4.1.0",
     "compression-webpack-plugin": "5.0.2",

@@ -20,7 +20,7 @@ public class FInformation extends BaseEntity
 
     /** 资料名称 */
     @Excel(name = "资料名称")
-    private Long name;
+    private String name;
 
     /** 资料内容 */
     @Excel(name = "资料内容")
@@ -39,12 +39,12 @@ public class FInformation extends BaseEntity
     {
         return id;
     }
-    public void setName(Long name) 
+    public void setName(String name)
     {
         this.name = name;
     }
 
-    public Long getName() 
+    public String getName()
     {
         return name;
     }

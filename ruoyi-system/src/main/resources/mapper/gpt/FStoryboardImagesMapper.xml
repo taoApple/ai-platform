@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gpt.mapper.FStoryboardImagesMapper">
+  <resultMap id="BaseResultMap" type="com.ruoyi.gpt.domain.model.FStoryboardImages">
+    <!--@mbg.generated-->
+    <!--@Table f_storyboard_images-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="storyboard_id" jdbcType="INTEGER" property="storyboardId" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="content_id" jdbcType="INTEGER" property="contentId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="creaet_user_id" jdbcType="INTEGER" property="creaetUserId" />
+    <result column="image" jdbcType="LONGVARCHAR" property="image" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, storyboard_id, content, content_id, update_time, create_time, creaet_user_id, 
+    image, `status`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from f_storyboard_images
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--@mbg.generated-->
+    delete from f_storyboard_images
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ruoyi.gpt.domain.model.FStoryboardImages" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into f_storyboard_images (storyboard_id, content, content_id, 
+      update_time, create_time, creaet_user_id, 
+      image, `status`)
+    values (#{storyboardId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}, #{contentId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{creaetUserId,jdbcType=INTEGER}, 
+      #{image,jdbcType=LONGVARCHAR}, #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ruoyi.gpt.domain.model.FStoryboardImages" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into f_storyboard_images
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="storyboardId != null">
+        storyboard_id,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="contentId != null">
+        content_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="creaetUserId != null">
+        creaet_user_id,
+      </if>
+      <if test="image != null">
+        image,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="storyboardId != null">
+        #{storyboardId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="contentId != null">
+        #{contentId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creaetUserId != null">
+        #{creaetUserId,jdbcType=INTEGER},
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.gpt.domain.model.FStoryboardImages">
+    <!--@mbg.generated-->
+    update f_storyboard_images
+    <set>
+      <if test="storyboardId != null">
+        storyboard_id = #{storyboardId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="contentId != null">
+        content_id = #{contentId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creaetUserId != null">
+        creaet_user_id = #{creaetUserId,jdbcType=INTEGER},
+      </if>
+      <if test="image != null">
+        image = #{image,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.gpt.domain.model.FStoryboardImages">
+    <!--@mbg.generated-->
+    update f_storyboard_images
+    set storyboard_id = #{storyboardId,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR},
+      content_id = #{contentId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      creaet_user_id = #{creaetUserId,jdbcType=INTEGER},
+      image = #{image,jdbcType=LONGVARCHAR},
+      `status` = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into f_storyboard_images
+    (storyboard_id, content, content_id, update_time, create_time, creaet_user_id, image, 
+      `status`)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.storyboardId,jdbcType=INTEGER}, #{item.content,jdbcType=LONGVARCHAR}, #{item.contentId,jdbcType=INTEGER}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.creaetUserId,jdbcType=INTEGER}, 
+        #{item.image,jdbcType=LONGVARCHAR}, #{item.status,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+</mapper>
